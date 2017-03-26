@@ -1,0 +1,137 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Development and contributions &mdash; SaltWebGui 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="SaltWebGui 0.0.1 documentation" href="index.html" />
+    <link rel="prev" title="User manual" href="usage.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="User manual"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SaltWebGui 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="development-and-contributions">
+<span id="index-0"></span><h1>Development and contributions<a class="headerlink" href="#development-and-contributions" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="push-requests-are-welcome">
+<h2>Push requests are welcome<a class="headerlink" href="#push-requests-are-welcome" title="Permalink to this headline">¶</a></h2>
+<p>Yep, this project is under active development!</p>
+<p>Any contribution is welcome, please push against the <em>develop</em> branch.
+If you are developing special features that required heavy and custom changes create a custom branch.</p>
+<p>Found a bug? Fill the <a class="reference external" href="https://github.com/SoftwareWorkersSrl/SaltWebGui/issues">issue</a> on github.</p>
+</div>
+<div class="section" id="coding-style">
+<h2>Coding style<a class="headerlink" href="#coding-style" title="Permalink to this headline">¶</a></h2>
+<p>Try to be conformed where possible to PEP8. If need help while using <em>VIM</em> I&#8217;d recommend the use of <a class="reference external" href="https://github.com/vim-syntastic/syntastic">syntastic</a>.</p>
+</div>
+<div class="section" id="principles">
+<h2>Principles<a class="headerlink" href="#principles" title="Permalink to this headline">¶</a></h2>
+<p>SaltWebGui is based on the python framework Flask.</p>
+<p>By now all of the data are stored in custom variables or classes. This is valid for user management as well as for the data received from saltstack.</p>
+<p>The first demo of the code was using directly the CLI (there is still a legacy code available under <em>saltwebgui/sat/salt_binding.py</em>), but now it is preferred to user the salt-api.
+This way is possible to run SaltWebGui on any server as long as there is an access to salt&#8217;s api.</p>
+<p>The current implementation uses the python <a class="reference external" href="https://github.com/saltstack/pepper">pepper</a> module in order to bind to saltstack.
+For quick references under <em>saltwebgui/salt/views.py</em> are available some the following objects to interact with saltstack:</p>
+<ul class="simple">
+<li>JOBS = Jobs()</li>
+<li>JOB = Job()</li>
+<li>KEYS = Keys()</li>
+<li>RUN = Run()</li>
+</ul>
+<p>The web interface is developed with bootstrap (and little of javascript code).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Development and contributions</a><ul>
+<li><a class="reference internal" href="#push-requests-are-welcome">Push requests are welcome</a></li>
+<li><a class="reference internal" href="#coding-style">Coding style</a></li>
+<li><a class="reference internal" href="#principles">Principles</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="usage.html"
+                        title="previous chapter">User manual</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/develop.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="usage.html" title="User manual"
+             >previous</a> |</li>
+        <li><a href="index.html">SaltWebGui 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2017, Riccardo Scartozzi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>
