@@ -1,8 +1,0 @@
-[BASIC]
-good-names: project,application,stream,runner,result
-
-[MESSAGES CONTROL]
-
-[TYPECHECK]
-
-ignored-classes=BaseTestCase
