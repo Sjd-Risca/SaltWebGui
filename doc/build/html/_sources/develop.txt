@@ -1,3 +1,5 @@
+.. index:: development, architecture
+
 =============================
 Development and contributions
 =============================

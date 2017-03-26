@@ -1,7 +1,9 @@
+.. index:: user manual, examples, screenshot
+
 User manual
 ===========
 
-Here a quick overview of functionality by screenshots.
+Here a quick overview of the SaltWebGui functionality by screenshots.
 
 Welcome to homepage!
 
