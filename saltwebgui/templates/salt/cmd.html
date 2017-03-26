@@ -1,0 +1,16 @@
+{% extends "salt/base.html" %}
+{% from "macros/_form.html" import render_form %}
+{% import "salt/macros.jinja" as macros %}
+{% block view %}
+<div class="panel panel-default">
+    <div class="panel-heading">Run salt command</div>
+
+    <div class="panel-body">
+        <h4>Highstate</h4>
+            {{ render_form(url_for('salt.run'), FormHighstate) }}
+        <h4>Any</h4>
+            {{ render_form(url_for('salt.run'), FormSalt) }}
+    </div>
+    <!-- end of panel-body --!>
+</div>
+{% endblock %}

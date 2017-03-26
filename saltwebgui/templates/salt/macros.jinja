@@ -1,0 +1,141 @@
+{% macro key_list(mylist) %}
+{# return a list from a source:
+
+key_list(['A', 'B'])
+<li>'A'</li>
+<li>'B'</li>
+#}
+<ul class="list-unstyled">
+{% for key in mylist %}
+    <li>{{ key }}</li>
+{% endfor %}
+</ul>
+{% endmacro %}
+
+{% macro jobsTable(header, data) %}
+{# This macro will render a table form the jobs list.
+
+header = ('A', 'B', 'C')
+data = {48484848484: {'A': 'dfdfd', 'B': 'datadata', 'C': 'datas'}}
+
+By default is added the ID column which will also be use for linking to the job
+#}
+<thead>
+    <tr>
+        <th>ID</th>
+{%- for colname in header %}
+        <th>{{ colname }}</th>
+{%- endfor %}
+    </tr>
+<thead>
+<tbody>
+{% if data is not mapping %}
+    <tr><td>No values</td></tr>
+{% else %}
+    {% for record in data %}
+    <tr>
+	    <td><a href={{ url_for('salt.job', jid=record, action='list') }}>{{ record }}</a> <a href={{ url_for('salt.job', jid=record, action='raw') }}>(raw)</a></td>
+        {% for key in header %}
+        <td>{{ data[record][key]|default('-') }}</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+{% endif %}
+</tbody>
+{% endmacro %}
+
+
+{% macro jobTable(head, body) %}
+{# This macro will render a table form the jobs list.
+
+head = ('A', 'B', 'C')
+body = [{'A': 'dfdfd', 'B': 'datadata', 'C': 'datas'}, {...}]
+
+#}
+<thead>
+    <tr>
+{%- for colname in head %}
+        <th>{{ colname }}</th>
+{%- endfor %}
+    </tr>
+<thead>
+<tbody>
+{% if data is not iterable %}
+    <tr><td>No values</td></tr>
+{% else %}
+    {% for record in body %}
+    <tr>
+        {% for key in head %}
+        <td>
+	    <div class="table-cell">
+             {{ record[key]|default('') }}
+            </div>
+	</td>
+        {% endfor %}
+    </tr>
+    {% endfor %}
+{% endif %}
+</tbody>
+{% endmacro %}
+
+
+
+
+{% macro JobOutput(data) %}
+{# Rendering of the json of the job run on minion #}
+{% if not data %}
+  <p>There is no output to show</p>
+{% elif data is string %}
+  <pre>{{ data }}</pre>
+{% elif data is iterable %}
+  <ul class="results">
+    {% for jobname in data %}
+      {% set job = data[jobname] %}
+      {% if job['result'] == true %}
+        {%  set class = 'correct' %}
+      {% elif job['result'] is none %}
+        {%  set class = 'none' %}
+      {%  else %}
+        {%  set class = 'failed' %}
+      {%  endif %}
+      <li class="{{ class }}{% if job['changes'].keys()|default(0)|length > 0 %} has_changes{%endif%}">
+        <font>{{ job['__id__'] }}</font>
+        <font>[{{ job['name'] }}]</font>
+        <ul>
+          <li class="{{ class }} comment">
+            <font>{{ job['comment'] }}</font>
+          </li>
+          {% if job['changes'].keys()|default(0)|length > 0 %}
+              {% for _key in job['changes'] %}
+                  {% set changes = job['changes'][_key] %}
+                  {% if changes is mapping %}
+              <li class="{{ class }} changes">
+                  ({{ _key }})
+                  <ul>
+                      {% for _k, _v in changes.iteritems() %}
+                      <li class="{{ class }} changes">
+                          {{ _k }}:
+                          <pre>{{ _v }}</pre>
+                      </li>
+                      {% endfor %}
+                  </ul>
+              </li>
+                  {% else %}
+              <li class="{{ class }} changes">
+  	          {{ _key }}:
+                  <pre>{{ changes }}</pre>
+              </li>
+                  {% endif %}
+              {% endfor %}
+          {% endif %}
+          <li class="{{ class }} duration"><font>{{ job['duration'] }}</font></li>
+          <li class="{{ class }} __run_num__"><font>{{ job['__run_num__'] }}</font></li>
+        </ul>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p>Error processing data!</p>
+{% endif %}
+{% endmacro %}
+

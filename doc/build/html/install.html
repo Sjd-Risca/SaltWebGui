@@ -1,0 +1,271 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installation &mdash; SaltWebGui 0.0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="SaltWebGui 0.0.1 documentation" href="index.html" />
+    <link rel="next" title="Development and contributions" href="develop.html" />
+    <link rel="prev" title="Welcome to SaltWebGui’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="develop.html" title="Development and contributions"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to SaltWebGui’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">SaltWebGui 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <span class="target" id="index-0"></span><div class="section" id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h1>
+<p>For running SaltWebGui it is recommended to use <strong>virtualenv</strong> in order to satisfy the dependencies (see <a class="reference internal" href="#virtualenv">Virtualenv</a>).
+<br />
+It is also required an access to the <strong>salt-api</strong> (see <a class="reference internal" href="#saltstack-requirements">Saltstack requirements</a> for further explanation).</p>
+<p>The components involved are:</p>
+<ul class="simple">
+<li>a web server (where to run SaltWebGui)</li>
+<li>a salt-master with accessible salt-api</li>
+</ul>
+<p>It is possible to deploy the SaltWebGui&#8217;s web server on the salt-master itself (in this case the salt-api can be kept private on localhost)
+or to have them on different server. In the latter be careful the salt-api is made accessible to the web-server: if it is widely accessible use a proper ssl encryption.</p>
+<p>Here follows the installation requirements, then an example for <a class="reference internal" href="#quick-installing-for-testing">Quick installing for testing</a> and a <a class="reference internal" href="#reference-for-production-installation">Reference for production installation</a>.</p>
+<div class="section" id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Permalink to this headline">¶</a></h2>
+<p>Analysis of minimum requirements for running SaltWebGui.</p>
+<ul class="simple">
+<li><a class="reference internal" href="#saltstack-requirements">Saltstack requirements</a>: minimum configuration for salt and its salt-api</li>
+<li><a class="reference internal" href="#virtualenv">Virtualenv</a>: python dependency installation</li>
+</ul>
+<div class="section" id="saltstack-requirements">
+<h3>Saltstack requirements<a class="headerlink" href="#saltstack-requirements" title="Permalink to this headline">¶</a></h3>
+<p>In order to use SaltWebGui it is required to enable <strong>salt-api</strong> on the salt master.</p>
+<p>For example on a debian distro just install salt-api with</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>aptitude install salt-api
+</pre></div>
+</div>
+<p>Then enable the salt-api module through the <em>salt-master</em>&#8216;s configuration file. Here a quick example suitable for local test (not safe for production):</p>
+<div class="highlight-python"><div class="highlight"><pre>rest_cherrypy:
+    disable_ssl: True
+    host: 127.0.0.1
+    port: 8000
+</pre></div>
+</div>
+<p>And set-up proper user permission (here enable system user <em>mylinuxuser</em>):</p>
+<div class="highlight-python"><div class="highlight"><pre>external_auth:
+    pam:
+        mylinuxuser:
+            - &quot;.*&quot;
+            - &quot;@runner&quot;
+            - &quot;@wheel&quot;
+</pre></div>
+</div>
+<p>The <em>mylinuxuser</em> has to be a system user (it is possible to create a custom one with <tt class="code bash docutils literal"><span class="pre">adduser</span> <span class="pre">mylinuxyser</span></tt>).</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">In order to use SaltWebGui an authentication method is required. At the time of writing saltstack supports both pam and LDAP, see the <a class="reference external" href="https://docs.saltstack.com/en/latest/topics/eauth/index.html">eauth manual</a>.</p>
+</div>
+</div>
+<div class="section" id="virtualenv">
+<h3>Virtualenv<a class="headerlink" href="#virtualenv" title="Permalink to this headline">¶</a></h3>
+<p>On a Debian system at least the following packages are required:</p>
+<div class="highlight-python"><div class="highlight"><pre>aptitude install libmysqlclient-dev python-dev libffi-dev gcc
+</pre></div>
+</div>
+<p>For using a virtualenv locally run</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd SaltWebGui
+virtualenv ./venv
+source venv/bin/activate
+pip install -r requirements.txt
+</pre></div>
+</div>
+<p>Now it&#8217;s possible to launch SaltWebGui from cli, like:</p>
+<div class="highlight-python"><div class="highlight"><pre>FLASK_APP=./wsgi.py flask run
+</pre></div>
+</div>
+</div>
+</div>
+<div class="section" id="quick-installing-for-testing">
+<h2>Quick installing for testing<a class="headerlink" href="#quick-installing-for-testing" title="Permalink to this headline">¶</a></h2>
+<p>This is a quick reference for having a debuggable installation for tests.
+I&#8217;d recommend to install it on salt-master (and access from an ssh tunnel) or to install it locally on you system and access the salt-api through a tunnel.
+Here I&#8217;ll try the latter.</p>
+<p>On salt-master:</p>
+<ol class="arabic">
+<li><p class="first">install salt-api</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>aptitude install salt-api
+</pre></div>
+</div>
+</li>
+<li><p class="first">enable salt-api adding the following configuration in <tt class="code docutils literal"><span class="pre">/etc/salt/master</span></tt> adding the following options:</p>
+<div class="highlight-python"><div class="highlight"><pre>rest_cherrypy:
+    disable_ssl: True
+    host: 127.0.0.1
+    port: 8000
+external_auth:
+    pam:
+        mylinuxuser:
+            - &quot;.*&quot;
+            - &quot;@runner&quot;
+            - &quot;@wheel&quot;
+</pre></div>
+</div>
+</li>
+<li><p class="first">add <em>mylinuxuser</em>:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>adduser mylinuxuser
+</pre></div>
+</div>
+</li>
+<li><p class="first">restart the salt-master:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>service salt-master restart
+</pre></div>
+</div>
+</li>
+</ol>
+<p>On your system:</p>
+<ol class="arabic">
+<li><p class="first">clone the repository</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>git clone https://github.com/SoftwareWorkersSrl/SaltWebGui.git
+</pre></div>
+</div>
+</li>
+<li><p class="first">install minimum required packages for pip dependency:</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>aptitude install libmysqlclient-dev python-dev libffi-dev gcc
+</pre></div>
+</div>
+</li>
+<li><p class="first">set-up the virtualenv</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd saltwebgui
+virtualenv ./venv
+source venv/bin/activate
+pip install -r requirements.txt
+</pre></div>
+</div>
+</li>
+<li><p class="first">if the salt-api is not publicly accessible start an SSH tunnel</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>ssh -L 8000:127.0.0.1:8000 -o ServerAliveInterval=30 sshuser@saltmasterurl
+</pre></div>
+</div>
+</li>
+<li><p class="first">start flask (by default it will be accessible on localhost at port <em>5000</em>):</p>
+<div class="code bash highlight-python"><div class="highlight"><pre>cd saltwebgui
+source venv/bin/activate
+FLASK_APP=./wsgi.py flask run
+</pre></div>
+</div>
+</li>
+</ol>
+<div class="admonition warning">
+<p class="first admonition-title">Warning</p>
+<p>When deploying SaltWebGui, if deploying for production, be careful to properly secure enough the system!</p>
+<p class="last">Set SSL protection on both the salt-api and the SaltWebGui, and don&#8217;t forget to use an enough secure password for the salt user.</p>
+</div>
+</div>
+<div class="section" id="reference-for-production-installation">
+<h2>Reference for production installation<a class="headerlink" href="#reference-for-production-installation" title="Permalink to this headline">¶</a></h2>
+<p>Sorry but this section is still to be implemented.</p>
+<p>While waiting for more documentation, I&#8217;d suggest to user a WSGI server for running SaltWebGui (use the one that you prefer). Please also do not use the debug mode in production because of its security concerns.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installation</a><ul>
+<li><a class="reference internal" href="#requirements">Requirements</a><ul>
+<li><a class="reference internal" href="#saltstack-requirements">Saltstack requirements</a></li>
+<li><a class="reference internal" href="#virtualenv">Virtualenv</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#quick-installing-for-testing">Quick installing for testing</a></li>
+<li><a class="reference internal" href="#reference-for-production-installation">Reference for production installation</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to SaltWebGui&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="develop.html"
+                        title="next chapter">Development and contributions</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/install.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="develop.html" title="Development and contributions"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to SaltWebGui’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">SaltWebGui 0.0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2017, Riccardo Scartozzi.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.2.3.
+    </div>
+  </body>
+</html>

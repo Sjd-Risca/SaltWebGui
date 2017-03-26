@@ -1,0 +1,85 @@
+{% extends "salt/base.html" %}
+{% import "salt/macros.jinja" as macros %}
+
+{% block view%}
+<div class="row">
+    <div class="col-lg-12">
+        <h1 class="page-header">Output of {{ jid }}</h1>
+    </div>
+    <!-- /.col-lg-12 -->
+</div>
+<div class="row">
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">Job's output <a href="{{ url_for('salt.job', jid=jid, action='raw') }}">(raw)</a></div>
+        <div class="panel-body">
+            <p><a href="{{ url_for('salt.job', jid=jid, action='update') }}">Update current job</a></p>
+            <div class="tags">
+                <label>
+                    <input type="checkbox" rel="correct" />
+                    Correct
+                </label>
+                <label>
+                    <input type="checkbox" rel="none" />
+                    Changed
+                </label>
+                <label>
+                    <input type="checkbox" rel="failed" />
+                    Failed
+                </label>
+                <label>
+                    <input type="checkbox" rel="has_changes" />
+                    Has some changes
+                </label>
+            </div>
+            <div class="fields">
+                <label>
+                    <input type="checkbox" rel="comment" checked />
+                    Comment
+                </label>
+                <label>
+                    <input type="checkbox" rel="changes" checked />
+                    Changes
+                </label>
+                <label>
+                    <input type="checkbox" rel="duration" />
+                    Duration
+                </label>
+                <label>
+                    <input type="checkbox" rel="__run_num__" />
+                    Run number
+                </label>
+            </div>
+
+            <p>Showing output of job {{job['ID']}}. List of responses:</p>
+            <p>
+            {% for minion in minions %}
+                <a href="#{{ minion }}">{{ minion }}</a>
+                    (<font style="color:green">{{ minions[minion][0] }}</font>-<font style="color:gray">{{ minions[minion][1] }}</font>-<font style="color:red">{{ minions[minion][2] }}</font>){% if not loop.last %},{% else %}.{% endif %}
+            {% endfor %}
+            </p>
+
+            <h1>Job output</h1>
+
+            {% for minion in job %}
+            <div class="panel panel-primary">
+                <div class="panel-heading">
+                    <a name={{ minion }}></a>
+                    <p>{{ minion }}</p>
+                </div>
+                <div class="panel-body">
+                    {{ macros.JobOutput(job[minion])|safe }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    </div>
+    <!-- /.col-lg-6 -->
+</div>
+<!-- /.row -->
+{% endblock %}
+{% block jslast %}
+<script type="text/javascript" src="{{ url_for('static', filename='js/job_result.js') }}"></script>
+<link rel=stylesheet type=text/css href="{{ url_for('static', filename='css/job_result.css') }}">
+{% endblock %}
