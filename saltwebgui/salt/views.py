@@ -88,7 +88,8 @@ def keys(action='list', key=None):
 def minions(action='list'):
     """Administrator for jobs."""
     if action == 'list':
-        _minions = sorted(KEYS.list_keys().get('accepted', list()))
+        KEYS.list_keys()
+        _minions = sorted(KEYS.keys.get('accepted', list()))
         return render_template('salt/minions_list.html', minions=_minions)
     else:
         domain = request.url_root
