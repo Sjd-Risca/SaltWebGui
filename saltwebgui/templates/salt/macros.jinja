@@ -137,3 +137,34 @@ body = [{'A': 'dfdfd', 'B': 'datadata', 'C': 'datas'}, {...}]
   {% endif %}
 {% endmacro %}
 
+
+
+{% macro minionsTable(minions) %}
+{# This macro will render a table with the minions' list.
+
+minions = ['minion1', 'minion2' ...]
+#}
+<thead>
+    <tr>
+        <th>Minion name</th>
+        <th>Informations</th>
+        <th>Quick commands</th>
+    </tr>
+<thead>
+<tbody>
+{% if minions is not iterable %}
+    <tr><td>No values</td></tr>
+{% else %}
+    {% for minion in minions %}
+    <tr>
+        <td><bold><{{ minion }}</bold></td>
+        <td>Show pillars, show top, show grains</td>
+        <td>refresh pillars</td>
+    </tr>
+    {% endfor %}
+{% endif %}
+</tbody>
+{% endmacro %}
+
+
+

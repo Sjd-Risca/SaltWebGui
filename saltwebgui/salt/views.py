@@ -83,6 +83,18 @@ def keys(action='list', key=None):
         func = 'salt/key/&lt;jid&gt;/&lt;action&gt;'
         return 'Usage: {}{}'.format(domain, func)
 
+@salt.route('/minions/<action>')
+@login_required
+def minions(action='list'):
+    """Administrator for jobs."""
+    if action == 'list':
+        _minions = sorted(KEYS.list_keys().get('accepted', list()))
+        return render_template('salt/minions_list.html', minions=_minions)
+    else:
+        domain = request.url_root
+        func = 'minions/&lt;action&gt;'
+        return 'Usage: {}{}'.format(domain, func)
+
 @salt.route('/run', methods=['GET', 'POST'])
 @login_required
 def run():

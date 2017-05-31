@@ -3,14 +3,15 @@
 {% block view %}
 <div class="panel panel-default">
     <div class="panel-heading">List of keys</div>
-
-    <h4>Accepted</h4>
-    {{ macros.key_list(keys['accepted'])|safe }}
-    <h4>Denied</h4>
-    {{ macros.key_list(keys['denied'])|safe }}
-    <h4>Rejected</h4>
-    {{ macros.key_list(keys['rejected'])|safe }}
-    <h4>Preshared</h4>
-    {{ macros.key_list(keys['pre'])|safe }}
+    <div class="panel-body">
+        <h4 style="color:green;">Accepted</h4>
+        {{ macros.key_list(keys['accepted'])|safe }}
+        <h4 style="color:red;">Denied</h4>
+        {{ macros.key_list(keys['denied'])|safe }}
+        <h4 style="color:orange">Rejected</h4>
+        {{ macros.key_list(keys['rejected'])|safe }}
+        <h4 style="color:blue">Preshared</h4>
+        {{ macros.key_list(keys['pre'])|safe }}
+    </div>
 </div>
 {% endblock %}

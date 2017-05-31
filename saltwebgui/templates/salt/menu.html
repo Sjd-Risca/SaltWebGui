@@ -20,7 +20,7 @@ Required variables:
     </li>
     <li>
         <a href='#'><i class="fa fa-list fa-fw"></i> Jobs' list<span class="fa arrow"></span></a>
-	<ul class="nav nav-second-level">
+        <ul class="nav nav-second-level">
             <li>
                 <a href={{ url_for('salt.jobs', action='list') }}><i class="fa fa-table fa-fw"></i> Jobs' list</a>
             </li>
@@ -32,9 +32,18 @@ Required variables:
     </li>
     <li>
         <a href="#"><i class="fa fa-key fa-fw"></i> Key management<span class="fa arrow"></span></a>
-	<ul class="nav nav-second-level">
+        <ul class="nav nav-second-level">
             <li>
                 <a href={{ url_for('salt.keys', action='list', key='') }}><i class="fa fa-list fa-fw"></i> Keys' list</a>
+            </li>
+        </ul>
+        <!-- /.nav-second-level -->
+    </li>
+    <li>
+        <a href="#"><i class="fa fa-cubes fa-fw"></i> Minion management<span class="fa arrow"></span></a>
+        <ul class="nav nav-second-level">
+            <li>
+                <a href={{ url_for('salt.minions', action='list', key='') }}><i class="fa fa-table fa-fw"></i> Minions list</a>
             </li>
         </ul>
         <!-- /.nav-second-level -->
