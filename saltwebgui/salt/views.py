@@ -3,6 +3,7 @@
 """
 import json
 import shlex
+import yaml
 from flask import Blueprint, render_template, redirect, flash, url_for, g, request
 from flask_login import login_required
 from . import form
@@ -29,6 +30,7 @@ def jobs(action='list'):
     header = JOBS.header
     return render_template('salt/jobs_list.html', jobs=_jobs, header=header)
 
+@salt.route('/job//<action>')
 @salt.route('/job/<jid>/<action>')
 @login_required
 def job(jid=None, action='list'):
@@ -83,18 +85,30 @@ def keys(action='list', key=None):
         func = 'salt/key/&lt;jid&gt;/&lt;action&gt;'
         return 'Usage: {}{}'.format(domain, func)
 
-@salt.route('/minions/<action>')
+@salt.route('/minions/<action>/')
+@salt.route('/minions/<action>/<minion>')
 @login_required
-def minions(action='list'):
+def minions(action='list', minion=None):
     """Administrator for jobs."""
     if action == 'list':
         KEYS.list_keys()
         _minions = sorted(KEYS.keys.get('accepted', list()))
         return render_template('salt/minions_list.html', minions=_minions)
+    if minion is None:
+        flash('Please first select a minion from the Minion list', 'warning')
+        return redirect(url_for('salt.minions', action='list'))
+    outformat = request.args.get('outformat', 'yaml')
+    if action in ['pillars', 'tops', 'grains'] and outformat in ['raw', 'yaml']:
+        data = MINIONS.get_data(minion, action, outformat)
     else:
         domain = request.url_root
         func = 'minions/&lt;action&gt;'
         return 'Usage: {}{}'.format(domain, func)
+    return render_template('salt/minions_pillars.html',
+                           action=action,
+                           minion=minion,
+                           data=data,
+                           outformat=outformat)
 
 @salt.route('/run', methods=['GET', 'POST'])
 @login_required
@@ -275,6 +289,57 @@ class Keys(object):
         """Accept the given key"""
         pass
 
+class Minions(object):
+    """Minions' data administrator"""
+    def __init__(self):
+        self.pillars = dict()
+        self.tops = dict()
+        self.grains = dict()
+
+    @staticmethod
+    def runner(tgt, func, arg=None, kwarg=None):
+        """Interface to salt-api"""
+        return g.salt.local(tgt, func, arg, kwarg)
+
+    def update(self, minion=None, resource='pillars'):
+        """Update the specified resource"""
+        commands = {'pillars': 'pillar.items', 'tops': 'state.show_top', 'grains': 'grains.items'}
+        if minion is None:
+            return False
+        if resource in commands:
+            data = self.runner(minion, commands[resource])
+            cleandata = data.get('return', list())[0].get(minion, dict())
+            _db = getattr(self, resource)
+            _db[minion] = cleandata
+            return True
+
+    @staticmethod
+    def indented(data):
+        """Return a raw and indented json text
+        """
+        return json.dumps(data, sort_keys=True, indent=2)
+
+    @staticmethod
+    def yaml(data):
+        """Return text as yaml"""
+        return yaml.safe_dump(data, default_flow_style=False, explicit_start=False)
+
+    def get_data(self, minion, resource, outformat):
+        """Easy link for calling back the requested data.
+
+        Input:
+          - minion: minion name
+          - resource: pillars, tops or grains
+          - outformat: yaml or raw (its a pretty json)
+        """
+        if not (resource in ['pillars', 'tops', 'grains'] and outformat in ['raw', 'yaml']):
+            return 'Wrong or missing parameters'
+        self.update(minion, resource)
+        data = getattr(self, resource)
+        _filter = getattr(self, outformat)
+        return _filter(data[minion])
+
+
 class Run(object):
     """command execution"""
     def __init__(self):
@@ -305,5 +370,6 @@ class Run(object):
 JOBS = Jobs()
 JOB = Job()
 KEYS = Keys()
+MINIONS = Minions()
 RUN = Run()
 

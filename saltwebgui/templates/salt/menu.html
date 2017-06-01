@@ -31,19 +31,29 @@ Required variables:
         <!-- /.nav-second-level -->
     </li>
     <li>
-        <a href="#"><i class="fa fa-key fa-fw"></i> Key management<span class="fa arrow"></span></a>
-        <ul class="nav nav-second-level">
-            <li>
-                <a href={{ url_for('salt.keys', action='list', key='') }}><i class="fa fa-list fa-fw"></i> Keys' list</a>
-            </li>
-        </ul>
-        <!-- /.nav-second-level -->
+        <a href="{{ url_for('salt.keys', action='list', key='') }}"><i class="fa fa-key fa-fw"></i> Keys management</a>
     </li>
     <li>
         <a href="#"><i class="fa fa-cubes fa-fw"></i> Minion management<span class="fa arrow"></span></a>
         <ul class="nav nav-second-level">
             <li>
-                <a href={{ url_for('salt.minions', action='list', key='') }}><i class="fa fa-table fa-fw"></i> Minions list</a>
+                <a href={{ url_for('salt.minions', action='list', minion='') }}>Minions list <i class="fa fa-table fa-fw"></i></a>
+            </li>
+            <li>
+                {%- if not minion is defined %}{% set minion = '' %}{% endif %}
+                <a href="#">Show the minion's<span class="fa arrow"></span></a>
+                <ul class="nav nav-third-level">
+                    <li>
+                        <a href="{{ url_for('salt.minions', action='pillars', minion=minion, outformat='yaml') }}">pillars</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('salt.minions', action='tops', minion=minion, outformat='yaml') }}">top states</a>
+                    </li>
+                    <li>
+                        <a href="{{ url_for('salt.minions', action='grains', minion=minion, outformat='yaml') }}">grains</a>
+                    </li>
+                </ul>
+                <!-- /.nav-third-level -->
             </li>
         </ul>
         <!-- /.nav-second-level -->

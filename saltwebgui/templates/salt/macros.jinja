@@ -158,7 +158,9 @@ minions = ['minion1', 'minion2' ...]
     {% for minion in minions %}
     <tr>
         <td><b>{{ minion }}</b></td>
-        <td>Show pillars, show top, show grains</td>
+	<td>Show <a href={{ url_for('salt.minions', action='pillars', minion=minion) }}>pillars</a>,
+            <a href={{ url_for('salt.minions', action='tops', minion=minion) }}>tops</a> or
+            <a href={{ url_for('salt.minions', action='grains', minion=minion) }}>grains</a></td>
         <td>refresh pillars</td>
     </tr>
     {% endfor %}
