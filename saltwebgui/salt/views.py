@@ -5,7 +5,7 @@ import json
 import shlex
 import yaml
 from flask import Blueprint, render_template, redirect, flash, url_for, g, request
-from flask_login import login_required
+from flask_login import login_required, logout_user
 from . import form
 from .debug import debug
 
@@ -248,7 +248,12 @@ class Jobs(object):
 
     def update(self):
         """Update the jobs database"""
-        _jobs = g.salt.runner('jobs.list_jobs', out='raw')
+        try:
+            _jobs = g.salt.runner('jobs.list_jobs', out='raw')
+        except PepperException:
+            flash('Authentication timeout', 'warning')
+            logout_user()
+            return redirect(url_for('login'))
         self.jobs = _jobs['return'][0] #pylint: disable=redefined-outer-name,invalid-name,unused-variable
         return True
 
