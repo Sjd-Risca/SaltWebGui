@@ -6,6 +6,7 @@ import shlex
 import yaml
 from flask import Blueprint, render_template, redirect, flash, url_for, g, request
 from flask_login import login_required, logout_user
+from pepper import PepperException
 from . import form
 from .debug import debug
 
@@ -254,7 +255,7 @@ class Jobs(object):
             flash('Authentication timeout', 'warning')
             logout_user()
             return redirect(url_for('login'))
-        self.jobs = _jobs['return'][0] #pylint: disable=redefined-outer-name,invalid-name,unused-variable
+        self.jobs = _jobs['return'][0]
         return True
 
     def get_raw(self):
