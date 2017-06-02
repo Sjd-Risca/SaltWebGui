@@ -157,7 +157,7 @@ class Job(object):
     def update(self, jid=None):
         """Return the job by ID"""
         if jid:
-            _job = g.salt.runner('jobs.lookup_jid', jid=jid, out='raw')
+            _job = g.salt.runner('jobs.lookup_jid', jid=jid)
             self.jobs[jid] = _job['return'][0] #pylint: disable=redefined-outer-name,invalid-name,unused-variable
             return True
         else:
@@ -250,11 +250,11 @@ class Jobs(object):
     def update(self):
         """Update the jobs database"""
         try:
-            _jobs = g.salt.runner('jobs.list_jobs', out='raw')
+            _jobs = g.salt.runner('jobs.list_jobs')
         except PepperException:
             flash('Authentication timeout', 'warning')
             logout_user()
-            return redirect(url_for('login'))
+            return redirect(url_for('frontend.login'))
         self.jobs = _jobs['return'][0]
         return True
 
