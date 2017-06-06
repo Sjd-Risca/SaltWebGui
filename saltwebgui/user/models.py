@@ -1,5 +1,10 @@
 # -*- coding: utf-8 -*-
-"""Basic user model"""
+"""Basic user model.
+
+The users' database is stored as a dictionary under USER.
+The form is:
+
+USER = {'username1': userObj, }"""
 
 import urllib2
 import pepper
@@ -42,6 +47,6 @@ class User(UserMixin):
             authenticated = False
         user = cls(login, auth)
         if authenticated:
-            USER.setdefault(user.username, user)
+            USER[user.username] = user
         return user, authenticated
 
