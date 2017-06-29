@@ -301,8 +301,8 @@ class Minions(object):
         self.tops = dict()
         self.grains = dict()
 
-    @api_status
     @staticmethod
+    @api_status
     def runner(tgt, func, arg=None, kwarg=None):
         """Interface to salt-api"""
         return g.salt.local(tgt, func, arg, kwarg)
@@ -351,8 +351,8 @@ class Run(object):
     def __init__(self):
         pass
 
-    @api_status
     @staticmethod
+    @api_status
     def runner(tgt, func, arg=None, kwarg=None):
         """Interface to salt-api"""
         g.salt.local_async(tgt, func, arg, kwarg)
