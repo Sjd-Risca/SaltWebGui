@@ -330,6 +330,11 @@ class Minions(object):
         """Return text as yaml"""
         return yaml.safe_dump(data, default_flow_style=False, explicit_start=False)
 
+    @staticmethod
+    def raw(data):
+        """Return text as raw"""
+        return data
+
     def get_data(self, minion, resource, outformat):
         """Easy link for calling back the requested data.
 
