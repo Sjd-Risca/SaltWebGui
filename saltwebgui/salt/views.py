@@ -4,11 +4,12 @@
 import json
 import shlex
 import yaml
-from flask import Blueprint, render_template, redirect, flash, url_for, g, request
-from flask_login import login_required, logout_user
-from pepper import PepperException
+from flask import Blueprint, render_template, redirect, flash, url_for, g, \
+    request
+from flask_login import login_required
 from . import form
 from .debug import debug
+from saltwebgui.decorators import api_status
 
 salt = Blueprint('salt', __name__, url_prefix='/salt') #pylint: disable=invalid-name
 
@@ -154,6 +155,7 @@ class Job(object):
     def __init__(self):
         self.jobs = dict()
 
+    @api_status
     def update(self, jid=None):
         """Return the job by ID"""
         if jid:
@@ -247,14 +249,10 @@ class Jobs(object):
         self.header = ('Function', 'Target', 'Target-type', 'User', \
             'StartTime', 'Arguments')
 
+    @api_status
     def update(self):
         """Update the jobs database"""
-        try:
-            _jobs = g.salt.runner('jobs.list_jobs')
-        except PepperException:
-            flash('Authentication timeout', 'warning')
-            logout_user()
-            return redirect(url_for('frontend.login'))
+        _jobs = g.salt.runner('jobs.list_jobs')
         self.jobs = _jobs['return'][0]
         return True
 
@@ -267,6 +265,7 @@ class Keys(object):
     def __init__(self):
         self.keys = None
 
+    @api_status
     def list_keys(self):
         """Return a list of all available keys in the format
         {'accepted': [1,2,3],
@@ -302,6 +301,7 @@ class Minions(object):
         self.tops = dict()
         self.grains = dict()
 
+    @api_status
     @staticmethod
     def runner(tgt, func, arg=None, kwarg=None):
         """Interface to salt-api"""
@@ -351,6 +351,7 @@ class Run(object):
     def __init__(self):
         pass
 
+    @api_status
     @staticmethod
     def runner(tgt, func, arg=None, kwarg=None):
         """Interface to salt-api"""
