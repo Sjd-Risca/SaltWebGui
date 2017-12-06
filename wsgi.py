@@ -9,6 +9,9 @@ Usage:
 
 This way is possible to use flask cli commands and pass other options, like:
     FLASK_APP=./wsgi.py FLASK_DEBUG=1 flask run --port 50001
+
+For running in a custom virtualenv use the environment variable VIRTUALENV, otherwise this
+script will  search in the path "[../][v]env"
 """
 import sys
 import os
@@ -27,7 +30,7 @@ def virtualenv():
     """Activate the virtualenv"""
     dir_path = os.path.dirname(os.path.realpath(__file__))
     for path in VENV_PATH:
-        if os.path.isdir(path):
+        if os.path.isdir(os.path.join(dir_path, path)):
             activate_this = os.path.join(dir_path, path, "bin/activate_this.py")
     execfile(activate_this, dict(__file__=activate_this))
 
