@@ -72,9 +72,15 @@ The *mylinuxuser* has to be a system user (it is possible to create a custom one
 Virtualenv
 ++++++++++
 
-On a Debian system at least the following packages are required::
+For installing the required virtual environment packages onto a Debian system, at least the following packages are required:
+
+- Debian 8 jessie::
 
   aptitude install libmysqlclient-dev python-dev libffi-dev gcc
+
+- Debian 9 wheeze::
+
+  aptitude install libmariadbclient-dev python-dev libffi-dev gcc
 
 For using a virtualenv locally run
 
@@ -88,6 +94,20 @@ For using a virtualenv locally run
 Now it's possible to launch SaltWebGui from cli, like::
 
   FLASK_APP=./wsgi.py flask run
+
+Virtualenv location
+...................
+
+By default the flask wsgi script will search for the virtual envivironment in the following path:
+
+- 'env'
+- 'venv'
+- '../env'
+- '../venv'
+
+But it will be possible to provide a custom path with the environment variable VIRTULENV.::
+
+  VIRTUALENV=/my/custom/env FLASK_APP=./wsgi.py flask run
 
 ----------------------------
 Quick installing for testing

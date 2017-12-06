@@ -14,6 +14,10 @@ import sys
 import os
 
 project = "saltwebgui"
+if os.environ('VIRTUALENV'):
+    VENV_PATH = os.environ('VIRTUALENV')
+else:
+    VENV_PATH = ['venv', 'env', '../venv', '../env']
 
 BASE_DIR = os.path.join(os.path.dirname(__file__))
 if BASE_DIR not in sys.path:
@@ -22,7 +26,9 @@ if BASE_DIR not in sys.path:
 def virtualenv():
     """Activate the virtualenv"""
     dir_path = os.path.dirname(os.path.realpath(__file__))
-    activate_this = os.path.join(dir_path, 'venv', "bin/activate_this.py")
+    for path in VENV_PATH:
+        if os.path.isdir(path):
+            activate_this = os.path.join(dir_path, path, "bin/activate_this.py")
     execfile(activate_this, dict(__file__=activate_this))
 
 virtualenv()
