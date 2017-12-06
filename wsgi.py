@@ -14,7 +14,7 @@ import sys
 import os
 
 project = "saltwebgui"
-if os.environ('VIRTUALENV'):
+if os.environ.get('VIRTUALENV', False):
     VENV_PATH = os.environ('VIRTUALENV')
 else:
     VENV_PATH = ['venv', 'env', '../venv', '../env']
