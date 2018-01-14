@@ -9,7 +9,7 @@ from flask import Blueprint, render_template, redirect, flash, url_for, g, \
 from flask_login import login_required
 from . import form
 from .debug import debug
-from saltwebgui.decorators import api_status
+from ..decorators import api_status
 
 salt = Blueprint('salt', __name__, url_prefix='/salt') #pylint: disable=invalid-name
 
@@ -173,15 +173,21 @@ class Job(object):
             return self.update(jid)
 
     def get_jid(self, jid):
-        """Return the jid"""
-        self.job_updated(jid)
-        return self.jobs[jid]
+        """Get the jid output.
+        If the output is not already present and is not possible to retrive it, return False.
+        """
+        if self.job_updated(jid):
+            return self.jobs[jid]
+        flash('Error reading job "{0}"'.format(jid), 'warning')
+        return False
 
     def indented_jid(self, jid):
         """Return a raw string of the job outputter, but with nice indentation.
         """
-        self.job_updated(jid)
-        return json.dumps(self.jobs[jid], sort_keys=True, indent=2)
+        if self.job_updated(jid):
+            return json.dumps(self.jobs[jid], sort_keys=True, indent=2)
+        flash('Error reading job "{0}"'.format(jid), 'warning')
+        return False
 
     @staticmethod
     def task_result_count(returner, minion, status):
@@ -207,9 +213,13 @@ class Job(object):
                self.task_result_count(returner, minion, False)
 
     def minion_status(self, jid):
-        """Return a list of minion followed by their execution status"""
-        self.job_updated(jid)
-        _job = self.jobs[jid]
+        """Return, for the select jid, a list of the minions executed followed
+        by the count of steps for each status between success, still, failed.
+        If is not possible to retrieve the jid, return False.
+        """
+        _job = self.get_jid(jid)
+        if not _job:
+            return False
         _minion = dict()
         for minion in _job:
             #to be rewritten with task_result_count
@@ -384,4 +394,3 @@ JOB = Job()
 KEYS = Keys()
 MINIONS = Minions()
 RUN = Run()
-

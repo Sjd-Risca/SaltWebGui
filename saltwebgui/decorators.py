@@ -2,10 +2,10 @@
 """Placeholder for custom decorators"""
 import sys
 from functools import wraps
+from urllib2 import URLError
 from flask import abort, flash, redirect, url_for
 from flask_login import current_user, logout_user
 from pepper import PepperException
-from urllib2 import URLError
 
 
 def admin_required(f):
@@ -18,7 +18,12 @@ def admin_required(f):
 
 
 def api_status(f):
-    """Test is api is working, otherwise logout"""
+    """Test api status:
+    - if api is working return the connection itself;
+    - if there is a session error, redirect to login;
+    - if saltstack is offline, return false;
+    - otherwise return error
+    """
     @wraps(f)
     def decorated_function(*args, **kwargs):
         try:
