@@ -89,10 +89,10 @@ body = [{'A': 'dfdfd', 'B': 'datadata', 'C': 'datas'}, {...}]
 Input:
 #}
 {%- if not job %}
-  <p>There is no output to show</p>
+  <p>The current job is not parsable</p>
 {%- elif job is string %}
-  <pre>{{ data }}</pre>
-{%- elif data is mapping %}
+  <pre>{{ job }}</pre>
+{%- elif job is mapping %}
   {%- set result = job['result']|default("failed") %}
   {%- if result == true %}  {%- set class = 'correct' %}
   {%- elif result is none %}{%- set class = 'none' %}
