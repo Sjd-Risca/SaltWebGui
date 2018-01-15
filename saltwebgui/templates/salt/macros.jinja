@@ -84,7 +84,7 @@ body = [{'A': 'dfdfd', 'B': 'datadata', 'C': 'datas'}, {...}]
 
 
 
-{% macro ParseJob(data) %}
+{% macro ParseJob(job) %}
 {# Parse the single job and prettyfies it.
 Input:
 #}
@@ -137,7 +137,7 @@ Input:
 
 
 
-{% macro JobOutput(data) %}
+{% macro MinionOutput(data) %}
 {# Rendering of the json of the job run on minion #}
   {%- if not data %}
     <p>There is no output to show</p>

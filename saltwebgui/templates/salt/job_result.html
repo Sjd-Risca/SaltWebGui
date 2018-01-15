@@ -62,17 +62,21 @@
 
                 <h1>Job output</h1>
 
-                {% for minion in job %}
+                {%- if job is mapping %}
+                  {% for minion in job %}
                 <div class="panel panel-primary">
                     <div class="panel-heading">
                         <a name={{ minion }}></a>
                         <p>{{ minion }}</p>
                     </div>
                     <div class="panel-body">
-                    {{ macros.JobOutput(job[minion])|safe }}
+                    {{ macros.MinionOutput(job[minion])|safe }}
                     </div>
                 </div>
-                {% endfor %}
+                  {% endfor %}
+                {%- else %}
+                <pre>{{ job }}</pre>
+                {%- endif %}
             </div>
             <!-- /.panel-body -->
         </div>
