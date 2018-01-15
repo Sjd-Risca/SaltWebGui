@@ -84,6 +84,59 @@ body = [{'A': 'dfdfd', 'B': 'datadata', 'C': 'datas'}, {...}]
 
 
 
+{% macro ParseJob(data) %}
+{# Parse the single job and prettyfies it.
+Input:
+#}
+{%- if not job %}
+  <p>There is no output to show</p>
+{%- elif job is string %}
+  <pre>{{ data }}</pre>
+{%- elif data is mapping %}
+  {%- set result = job['result']|default("failed") %}
+  {%- if result == true %}  {%- set class = 'correct' %}
+  {%- elif result is none %}{%- set class = 'none' %}
+  {%- else %}               {%- set class = 'failed' %}
+  {%  endif %}
+  {%- set changes = job['changes']|default(dict()) %}
+  <li class="{{ class }}{% if changes.keys()|default(0)|length > 0 %} has_changes{% endif %}">
+    <font>{{ job['__id__']|default('Not defined') }}</font>
+    <font>[{{ job['name']|default('Not defined') }}]</font>
+    <ul>
+      <li class="{{ class }} comment">
+        <font>{{ job['comment']|default('unset')|e }}</font>
+      </li>
+  {%- if job['changes'].keys()|default(0)|length > 0 %}
+    {%- for _key in job['changes'] %}
+      {%- set changes = job['changes'][_key] %}
+      <li class="{{ class }} changes">
+      {%- if changes is mapping %}
+        ({{ _key|e }})
+        <ul>
+          {%- for _k, _v in changes.iteritems() %}
+          <li class="{{ class }} changes">
+            {{ _k|e }}:
+            <pre>{{ _v|e }}</pre>
+          </li>
+          {%- endfor %}
+        </ul>
+      {%- else %}
+        {{ _key|e }}:
+        <pre>{{ changes|e }}</pre>
+      {%- endif %}
+      </li>
+    {%- endfor %}
+  {%- endif %}
+      <li class="{{ class }} duration"><font>{{ job['duration']|default('unset') }}</font></li>
+      <li class="{{ class }} __run_num__"><font>{{ job['__run_num__']|default('unset') }}</font></li>
+    </ul>
+  </li>
+{%- endif %}
+{% endmacro %}
+
+
+
+
 {% macro JobOutput(data) %}
 {# Rendering of the json of the job run on minion #}
   {%- if not data %}
@@ -94,42 +147,7 @@ body = [{'A': 'dfdfd', 'B': 'datadata', 'C': 'datas'}, {...}]
     <ul class="results">
       {%- for jobname in data %}
         {%- set job = data[jobname] %}
-        {%- if job['result'] == true %}{% set class = 'correct' %}
-        {%- elif job['result'] is none %}{%  set class = 'none' %}
-        {%- else %}{%  set class = 'failed' %}
-        {%  endif %}
-        <li class="{{ class }}{% if job['changes'].keys()|default(0)|length > 0 %} has_changes{%endif%}">
-          <font>{{ job['__id__'] }}</font>
-          <font>[{{ job['name'] }}]</font>
-          <ul>
-            <li class="{{ class }} comment">
-              <font>{{ job['comment']|e }}</font>
-            </li>
-            {%- if job['changes'].keys()|default(0)|length > 0 %}
-              {%- for _key in job['changes'] %}
-                {%- set changes = job['changes'][_key] %}
-                <li class="{{ class }} changes">
-                {%- if changes is mapping %}
-                    ({{ _key|e }})
-                    <ul>
-                      {% for _k, _v in changes.iteritems() %}
-                        <li class="{{ class }} changes">
-                          {{ _k|e }}:
-                          <pre>{{ _v|e }}</pre>
-                        </li>
-                      {% endfor %}
-                    </ul>
-                {% else %}
-  	          {{ _key|e }}:
-                  <pre>{{ changes|e }}</pre>
-                {% endif %}
-                </li>
-              {%- endfor %}
-            {%- endif %}
-            <li class="{{ class }} duration"><font>{{ job['duration'] }}</font></li>
-            <li class="{{ class }} __run_num__"><font>{{ job['__run_num__'] }}</font></li>
-          </ul>
-        </li>
+	{{ ParseJob(job) }}
       {%- endfor %}
     </ul>
   {% else %}
