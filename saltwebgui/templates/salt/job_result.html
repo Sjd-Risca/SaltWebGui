@@ -52,10 +52,12 @@
                 </div>
                 <p>Showing output of job {{ jid }}. List of responses:</p>
                 <p>
-                {% for minion in minions %}
+                {%- if minions is mapping %}
+                {%- for minion in minions %}
                     <a href="#{{ minion }}">{{ minion }}</a>
                     (<font style="color:green">{{ minions[minion][0] }}</font>-<font style="color:gray">{{ minions[minion][1] }}</font>-<font style="color:red">{{ minions[minion][2] }}</font>){% if not loop.last %},{% else %}.{% endif %}
-                {% endfor %}
+                {%- endfor %}
+                {%- endif %}
                 </p>
 
                 <h1>Job output</h1>
