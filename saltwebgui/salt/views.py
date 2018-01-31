@@ -167,7 +167,7 @@ class Job(object):
 
     def job_updated(self, jid):
         """Check if a job has already updated, if not try to update it"""
-        if jid in self.jobs:
+        if jid in self.jobs.keys():
             return True
         else:
             return self.update(jid)
