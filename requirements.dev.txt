@@ -26,6 +26,7 @@ paramiko==1.16.0
 passlib==1.6.5
 pycparser==2.14
 pycrypto==2.6.1
+pylint==1.5.5
 python-dateutil==2.5.3
 pytz==2016.4
 requests==2.10.0
