@@ -98,7 +98,12 @@ Input:
   {%- elif result is none %}{%- set class = 'none' %}
   {%- else %}               {%- set class = 'failed' %}
   {%  endif %}
-  {%- set changes = job['changes']|default(dict()) %}
+  {%- set job_changes = job["changes"]|default(dict()) %}
+  {%- set job_pchanges = job["pchanges"]|default(dict()) %}
+  {%- if job_changes %}{% set changes = job_changes %}
+  {%- elif job_pchanges %}{% set changes = job_pchanges %}
+  {%- else %}{% set changes = dict() %}
+  {%- endif %}
   <li class="{{ class }}{% if changes.keys()|default(0)|length > 0 %} has_changes{% endif %}">
     <font>{{ job['__id__']|default('Not defined') }}</font>
     <font>[{{ job['name']|default('Not defined') }}]</font>
@@ -106,24 +111,24 @@ Input:
       <li class="{{ class }} comment">
         <font>{{ job['comment']|default('unset')|e }}</font>
       </li>
-  {%- if job['changes'].keys()|default(0)|length > 0 %}
-    {%- for _key in job['changes'] %}
-      {%- set changes = job['changes'][_key] %}
+  {%- if changes %}
+    {%- for _key in changes|default(dict()) %}
+      {%- set change = changes[_key] %}
       <li class="{{ class }} changes">
-      {%- if changes is mapping %}
-        ({{ _key|e }})
-        <ul>
-          {%- for _k, _v in changes.iteritems() %}
-          <li class="{{ class }} changes">
-            {{ _k|e }}:
-            <pre>{{ _v|e }}</pre>
-          </li>
-          {%- endfor %}
-        </ul>
-      {%- else %}
+      {%- if change is mapping %}
+          ({{ _key|e }})
+          <ul>
+            {% for _k, _v in change.iteritems() %}
+              <li class="{{ class }} changes">
+                {{ _k|e }}:
+                <pre>{{ _v|e }}</pre>
+              </li>
+            {% endfor %}
+          </ul>
+      {% else %}
         {{ _key|e }}:
-        <pre>{{ changes|e }}</pre>
-      {%- endif %}
+        <pre>{{ change|e }}</pre>
+      {% endif %}
       </li>
     {%- endfor %}
   {%- endif %}
