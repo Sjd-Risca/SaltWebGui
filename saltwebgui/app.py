@@ -113,7 +113,7 @@ def configure_logging(app):
             '[in %(pathname)s:%(lineno)d]'))
         app.logger.addHandler(info_file_handler)
     else:
-        print '{} is missing! Please create it.'.format(os.path.isdir(app.config['LOG_FOLDER']))
+        print '{} is missing! Please create it.'.format(app.config['LOG_FOLDER'])
 
     #if os.environ.get("PEPPER_LOG"):
 
