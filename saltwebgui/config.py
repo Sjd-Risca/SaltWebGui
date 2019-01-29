@@ -7,7 +7,7 @@ from .utils import INSTANCE_FOLDER_PATH
 class BaseConfig(object):
     """Base configuration"""
 
-    PROJECT = "SaltWebGui"
+    PROJECT = "saltwebgui"
     #Salt-api connection parameters
     SALT_URI = "http://127.0.0.1:8000"
 

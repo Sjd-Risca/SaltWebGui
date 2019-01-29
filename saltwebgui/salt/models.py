@@ -8,7 +8,7 @@ import yaml
 from flask import flash, g
 from ..decorators import api_status
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('pepper')
 
 class JobProxy(object):
     """Jobs storage object"""

@@ -104,6 +104,7 @@ def configure_logging(app):
     app.logger.setLevel(logging.INFO)
 
     if os.path.isdir(app.config['LOG_FOLDER']):
+        print 'Going to log to {}.'.format(app.config['LOG_FOLDER'])
         info_log_path = os.path.join(app.config['LOG_FOLDER'], 'info.log')
         info_file_handler = handlers.RotatingFileHandler(info_log_path,
                                                          maxBytes=100000,
@@ -116,7 +117,10 @@ def configure_logging(app):
     else:
         print '{} is missing! Please create it.'.format(app.config['LOG_FOLDER'])
 
-    #if os.environ.get("PEPPER_LOG"):
+    if os.environ.get("PEPPER_LOG"):
+        pepper_log = logging.getLogger('pepper')
+        pepper_log.setLevel(logging.DEBUG)
+        pepper_log.addHandler(info_file_handler)
 
     #from logging.handlers import SMTPHandler
     #mail_handler = SMTPHandler(app.config['MAIL_SERVER'],
