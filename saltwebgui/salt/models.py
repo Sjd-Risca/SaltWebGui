@@ -135,6 +135,7 @@ class JobsList(object):
         self.header = ('Function', 'Target', 'Target-type', 'User', \
             'StartTime', 'Arguments')
 
+    @property
     def filtered_data(self):
         """Return only the jobs data filtered by header.
         Expected result:
