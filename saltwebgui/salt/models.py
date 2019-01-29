@@ -35,7 +35,7 @@ class JobProxy(object):
             raise ValueError('Jid parameter is missing')
         job = g.salt.runner('jobs.lookup_jid', jid=jid, missing=True, full_return=True)
         logger.debug("Found job id %s document as: %r", jid, job)
-        self._jobs_cache[jid] = job
+        self._jobs_cache[jid] = job['return'][0]
         return True
 
     def job_updated(self, jid):
