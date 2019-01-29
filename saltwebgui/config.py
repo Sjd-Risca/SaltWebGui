@@ -7,7 +7,7 @@ from .utils import INSTANCE_FOLDER_PATH
 class BaseConfig(object):
     """Base configuration"""
 
-    PROJECT = "saltwebgui"
+    PROJECT = "SaltWebGui"
     #Salt-api connection parameters
     SALT_URI = "http://127.0.0.1:8000"
 
@@ -40,3 +40,5 @@ class TestConfig(BaseConfig):
     CSRF_ENABLED = False
     WTF_CSRF_ENABLED = False
 
+class SaltWebGui(BaseConfig):
+    pass
