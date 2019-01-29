@@ -97,6 +97,7 @@ def configure_logging(app):
         return
 
     import logging
+    from logging import handlers
     # logs' level: [DEBUG, INFO, WARN, ERROR]
     # Set info level on logger, which might be overwritten by handers.
     # Suppress DEBUG messages.
@@ -104,9 +105,9 @@ def configure_logging(app):
 
     if os.path.isdir(app.config['LOG_FOLDER']):
         info_log_path = os.path.join(app.config['LOG_FOLDER'], 'info.log')
-        info_file_handler = logging.handlers.RotatingFileHandler(info_log_path,
-                                                                 maxBytes=100000,
-                                                                 backupCount=10)
+        info_file_handler = handlers.RotatingFileHandler(info_log_path,
+                                                         maxBytes=100000,
+                                                         backupCount=10)
         info_file_handler.setLevel(logging.DEBUG)
         info_file_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s '
