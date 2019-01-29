@@ -155,7 +155,7 @@ class JobsList(object):
         """Return list of jobs"""
         if self._jobs_data is None:
             self.update()
-        return self._jobs_data
+        return self.filtered_data
 
     @api_status
     def update(self):
