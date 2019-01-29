@@ -34,10 +34,10 @@ class User(UserMixin):
     @classmethod
     def authenticate(cls, login, password):
         """Performe the authentication against salt-api"""
-        salt = pepper.Pepper(current_app.config['SALT_URI'])
+        salt_api = pepper.Pepper(current_app.config['SALT_URI'])
         auth = None
         try:
-            auth = salt.login(login, password, 'pam')
+            auth = salt_api.login(login, password, 'pam')
             authenticated = True
         except urllib2.URLError:
             flash('Error connecting to salt master', 'warning')
@@ -49,4 +49,3 @@ class User(UserMixin):
         if authenticated:
             USER[user.username] = user
         return user, authenticated
-

@@ -1,5 +1,5 @@
 [BASIC]
-good-names: project,application,stream,runner,result
+good-names: project,application,stream,runner,result,logger
 
 [MESSAGES CONTROL]
 
