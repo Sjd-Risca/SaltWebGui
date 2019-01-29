@@ -3,6 +3,7 @@
 
 import pepper
 from flask import Flask, render_template, g
+from flask_login import current_user
 
 from .config import DefaultConfig
 from .user import USER
@@ -10,8 +11,6 @@ from .user import USER
 from .extensions import login_manager
 from .filters import pretty_date, nl2br
 from .utils import INSTANCE_FOLDER_PATH
-
-from flask_login import current_user
 
 
 # For import *
@@ -92,13 +91,12 @@ def configure_template_filters(app):
 def configure_logging(app):
     """Configure file(info) and email(error) logging."""
 
-    if app.debug or app.testing:
+    import os
+    if (app.debug or app.testing) and os.environ.get("LOG_TO_STDOUT"):
         # Skip loggin setup for debug and test mode: just check standard output.
         return
 
     import logging
-    import os
-    from logging.handlers import SMTPHandler
     # logs' level: [DEBUG, INFO, WARN, ERROR]
     # Set info level on logger, which might be overwritten by handers.
     # Suppress DEBUG messages.
@@ -109,7 +107,7 @@ def configure_logging(app):
         info_file_handler = logging.handlers.RotatingFileHandler(info_log_path,
                                                                  maxBytes=100000,
                                                                  backupCount=10)
-        info_file_handler.setLevel(logging.INFO)
+        info_file_handler.setLevel(logging.DEBUG)
         info_file_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(levelname)s: %(message)s '
             '[in %(pathname)s:%(lineno)d]'))
@@ -117,6 +115,9 @@ def configure_logging(app):
     else:
         print '{} is missing! Please create it.'.format(os.path.isdir(app.config['LOG_FOLDER']))
 
+    #if os.environ.get("PEPPER_LOG"):
+
+    #from logging.handlers import SMTPHandler
     #mail_handler = SMTPHandler(app.config['MAIL_SERVER'],
     #                           app.config['MAIL_USERNAME'],
     #                           app.config['ADMINS'],
